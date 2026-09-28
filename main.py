@@ -14,7 +14,17 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # подключение к PostgreSQL
-DATABASE_URL = "postgresql://postgres:1234@localhost:5432/brand_shop"
+# DATABASE_URL = "postgresql://postgres:1234@localhost:5432/brand_shop"
+# engine = create_engine(DATABASE_URL)
+
+
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://postgres:1234@localhost:5432/brand_shop")
+
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 engine = create_engine(DATABASE_URL)
 
 
