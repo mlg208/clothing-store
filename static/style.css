@@ -1,0 +1,839 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Helvetica Neue', sans-serif; letter-spacing: 0.5px; }
+
+.navbar {
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* центр меню */
+    padding: 20px 50px;
+    position: relative;
+    min-height: 80px;
+}
+
+.logo {
+    position: absolute;
+    left: 50px;
+    top: 20px;
+}
+
+.logo a {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.logo a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+}
+
+.nav-links {
+   display: flex;
+    gap: 30px;
+    margin-top: 10px;
+    list-style: none;
+}
+.nav-links a {
+    color: #ffffff;
+    text-decoration: none; /* убрать подчеркивание */
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    transition: 0.3s;
+}
+.nav-icons a {
+    color: #ffffff !important;
+    text-decoration: none;
+    font-size: 20px;
+    display: inline-block;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-icons a:hover {
+    color: #d4af37 !important;
+    transform: translateY(-3px);
+}
+
+.nav-icons a:active {
+    transform: translateY(0) scale(0.9);
+}
+
+.nav-icons {
+   position: absolute;
+    right: 50px;
+    top: 25px;
+    display: flex;
+    gap: 20px;
+}
+.nav-links a:hover, .nav-icons a:hover {
+    color: #888888;      /* серый при наведении */
+}
+
+.product-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 40px; padding: 50px;
+}
+
+.product-card img { width: 100%; height: 400px; object-fit: cover; background: #f5f5f5; }
+.product-info { margin-top: 15px; text-align: center; }
+.product-brand { font-size: 12px; color: #888; text-transform: uppercase; }
+.product-name { font-size: 16px; margin: 5px 0; }
+.product-price { font-weight: bold; }
+
+
+
+.hero { position: relative; width: 100%; height: 80vh; overflow: hidden; background-color: #1a1a1a;}
+.hero img { width: 100%; height: 100%; object-fit: cover; display: block;}
+.hero-text {
+    position: absolute;
+    bottom: 20%;
+    left: 50px;
+    color: white;
+    z-index: 2;
+}
+.hero-text h1 { font-size: 64px; font-weight: 900; letter-spacing: 5px; margin-bottom: 20px; }
+.btn-black {
+    display: inline-block; padding: 15px 40px;
+    background: black; color: white;
+    text-decoration: none; text-transform: uppercase;
+    font-size: 12px; font-weight: bold; letter-spacing: 2px;
+    transition: 0.3s;
+    border-radius: 40px
+}
+.btn-black:hover { background: white; color: black; }
+
+
+.product-tabs { padding: 60px 0 30px; text-align: center; }
+.tabs-header {
+display: flex;
+    justify-content: center; /* центр Хиты / Новинки */
+    align-items: center;
+    gap: 30px;
+}
+.tab-btn {
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 5px 0;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+
+.tab-btn:hover {
+    color: #333 !important;
+}
+
+
+.tab-btn.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #000;
+    }
+.tab-spacer { color: #e0e0e0; font-size: 18px; }
+
+
+.product-sections { padding: 0 50px 100px; }
+.product-grid {
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+.product-grid.active { display: grid; }
+
+/* прем карточка товаров */
+.product-card { background: white; transition: 0.3s; }
+.card-image { position: relative; overflow: hidden; }
+.card-image img { width: 100%; height: 400px; object-fit: cover; background: #f9f9f9; }
+
+
+.card-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.03);
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; transition: 0.3s;
+}
+.product-card:hover .card-overlay { opacity: 1; }
+
+.btn-quick-add {
+    padding: 10px 25px; background: white; border: 1px solid black;
+    color: black; font-size: 11px; font-weight: bold;
+    cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+    transition: 0.3s;
+}
+.btn-quick-add:hover { background: black; color: white; }
+
+
+.product-info { margin-top: 15px; text-align: center; padding: 0 10px; }
+.product-brand { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+.product-name { font-size: 15px; margin: 5px 0; color: #333; font-weight: 300; }
+.product-price { font-weight: bold; font-size: 16px; margin-top: 8px; }
+
+
+
+.promo-grid {
+    padding: 60px 50px;
+    background-color: #f9f9f9;
+}
+
+.section-title {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+.promo-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.promo-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+
+    display: block;
+}
+
+.promo-item img {
+
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+
+    transition: transform 0.6s ease;
+
+    mix-blend-mode: multiply;
+}
+
+
+.promo-item:hover .promo-label {
+    opacity: 0.7;
+    text-decoration: underline !important;
+}
+
+
+.promo-label {
+    position: absolute;
+    bottom: -12px;
+    left: 160px;
+    width: 50%;
+
+    padding: 15px 5px;
+
+    color: #000 !important;
+    text-decoration: none !important;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+
+    z-index: 10;
+    transition: 0.3s ease;
+}
+
+
+.main-footer {
+    background-color: #000;
+    color: #fff;
+    padding: 80px 50px 30px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr;
+    gap: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section h3.footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.footer-section h4 {
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    color: #888;
+}
+
+.footer-section p {
+    color: #ccc;
+    line-height: 1.6;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.footer-section ul li a:hover {
+    color: #fff;
+    padding-left: 5px;
+}
+
+
+.social-links {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    color: #fff;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.social-links a:hover {
+    color: #d4af37;
+}
+
+
+.footer-bottom {
+    border-top: 1px solid #222;
+    margin-top: 50px;
+    padding-top: 30px;
+    text-align: center;
+}
+
+.footer-bottom p {
+    font-size: 12px;
+    color: #555;
+    letter-spacing: 1px;
+}
+
+
+.footer-section i {
+    margin-right: 10px;
+    color: #d4af37;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Профиль пользователя */
+.profile-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 50px;
+}
+
+.profile-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 30px;
+    margin-bottom: 40px;
+}
+
+.profile-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+}
+
+.user-status {
+    color: #d4af37; /* Золотой цвет статуса */
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+}
+
+.profile-info h3, .profile-orders h3 {
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.info-item label {
+    color: #888;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.btn-outline {
+    background: none;
+    border: 0px solid #000;
+    padding: 10px 25px;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
+    background-color:#d4d6d6;
+    border-radius: 25px;
+}
+
+.btn-outline:hover {
+    background: #000;
+    color: #fff;
+
+
+}
+
+/* Таблица заказов */
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders-table th {
+    text-align: left;
+    padding: 15px 10px;
+    border-bottom: 2px solid #000;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.orders-table td {
+    padding: 20px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.status-badge {
+    background: #f0f0f0;
+    padding: 5px 10px;
+    font-size: 11px;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+
+
+
+
+
+
+
+/* Корзина */
+.cart-container { max-width: 1200px; margin: 50px auto; padding: 0 50px; min-height: 60vh; }
+.cart-header h1 { font-family: 'Playfair Display', serif; font-size: 32px; letter-spacing: 2px; margin-bottom: 40px; }
+
+.cart-content { display: grid; grid-template-columns: 2fr 1fr; gap: 50px; }
+
+.cart-item {
+    display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #eee; position: relative;
+}
+.cart-item img { width: 100px; height: 130px; object-fit: cover; margin-right: 20px; }
+.item-details h3 { font-size: 14px; letter-spacing: 1px; margin-bottom: 10px; }
+.item-meta { font-size: 12px; color: #888; margin-bottom: 15px; }
+
+.item-controls { display: flex; align-items: center; gap: 15px; }
+.qty-btn { background: none; border: 1px solid #ddd; width: 30px; height: 30px; cursor: pointer; }
+
+.item-price { margin-left: auto; font-weight: bold; font-size: 16px; }
+.remove-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #ccc; margin-left: 20px; }
+.remove-btn:hover { color: #000; }
+
+/* Итоги корзины */
+.cart-summary { background: #f9f9f9; padding: 30px; height: fit-content; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
+.summary-total { display: flex; justify-content: space-between; margin-top: 25px; padding-top: 25px; border-top: 1px solid #ddd; font-weight: bold; font-size: 18px; }
+.btn-full { width: 100%; margin-top: 30px; text-align: center; }
+.free-shipping { color: #27ae60; font-weight: bold; }
+.payment-methods { font-size: 10px; color: #999; text-align: center; margin-top: 20px; text-transform: uppercase; }
+
+/* Избранное (боковое окно) */
+#wishlist-drawer {
+    position: fixed; top: 0; right: -400px; width: 400px; height: 100%;
+    background: #fff; z-index: 1000; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    transition: 0.4s; padding: 40px;
+}
+#wishlist-drawer.open { right: 0; }
+.drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+
+
+
+
+
+
+
+/* Стили поиска */
+
+.search-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.filters-sidebar {
+    width: 100%;
+    max-width: 600px;
+    background: #f9f9f9;
+    padding: 30px;
+    margin-bottom: 50px;
+    position: static;
+    border-radius: 15px;
+}
+
+/* ИСПРАВЛЕНО: была буква 'ю' вместо точки */
+.filter-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.filter-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.filter-group input, .filter-group select {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-top: 5px;
+}
+
+.search-results {
+    width: 100%;
+}
+
+.search-results h2 {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.error_txt {
+    grid-column: 1 / -1; /* Растягивает элемент на всю ширину сетки */
+    text-align: center;  /* Центрирует текст внутри этой ширины */
+    width: 100%;
+    padding: 100px 0;    /* Добавит свободного места сверху и снизу */
+    font-size: 18px;
+    color: #888;
+}
+
+
+/* Стили для ссылки сброса */
+.reset-link {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #888;           /* Делаем серым, чтобы не бросалось в глаза */
+    text-decoration: none; /* УБИРАЕТ СИНЮЮ ПОЛОСКУ */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.reset-link:hover {
+    color: #000;           /* При наведении становится черным */
+    text-decoration: underline; /* Полоска появится только при наведении (по желанию) */
+}
+
+
+
+
+
+
+
+/* Контейнер для пункта меню */
+.nav-item {
+    position: static; /* Важно: чтобы меню растягивалось на всю ширину navbar */
+}
+
+/* Скрытое выпадающее меню */
+.mega-menu {
+    position: absolute;
+    top: 100%; /* Появляется сразу под набаром */
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #eee;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    display: none; /* Скрыто */
+    z-index: 1000;
+    padding: 40px 0;
+}
+
+/* Показываем при наведении */
+.nav-item:hover .mega-menu {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Сетка внутри меню */
+.mega-menu-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+}
+
+.menu-column {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.menu-column h3 {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.menu-column a {
+    color: #666 !important; /* Серый цвет как на твоем скрине */
+    font-size: 13px !important;
+    text-transform: none !important;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px !important;
+}
+
+.menu-column a:hover {
+    color: #000 !important;
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+
+
+
+
+
+/* Обновляем оверлей: убираем фиксированную высоту, ставим min-height */
+/* ПАНЕЛЬ ПОИСКА (ФИКСИМ ВНЕШНИЙ ВИД) */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    min-height: 85px;
+    background: #fff;
+    z-index: 10000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.search-overlay.active {
+    left: 0;
+}
+
+.search-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 50px;
+}
+
+.search-form-dynamic {
+    width: 100%; /* Растягиваем форму на всю ширину контейнера */
+}
+
+.search-main-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #000; /* Жирная черная линия снизу */
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.search-main-row i {
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.search-main-row input {
+    flex: 1; /* ЗАСТАВЛЯЕТ ПОЛЕ ЗАНЯТЬ ВСЁ СВОБОДНОЕ МЕСТО */
+    border: none !important; /* Убираем рамку, которая видна на скрине */
+    outline: none !important;
+    background: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.search-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-actions button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-actions button:hover {
+    color: #888;
+}
+/* ПАНЕЛЬ ФИЛЬТРОВ (Дизайн и Анимация) */
+.filter-panel {
+    max-height: 0;           /* Начальная высота 0 */
+    overflow: hidden;        /* Скрываем содержимое */
+    background: #fff;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Плавное раскрытие */
+}
+
+.filter-panel.open {
+    max-height: 400px;       /* Высота при раскрытии */
+    padding-top: 30px;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 10px;
+}
+
+.filter-columns {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.filter-col {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.filter-col label {
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+/* Красивые Инпуты и Селекты */
+.filter-col select,
+.price-inputs input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    background: #fafafa;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.filter-col select:focus,
+.price-inputs input:focus {
+    border-color: #000;
+    background: #fff;
+}
+
+.price-inputs {
+    display: flex;
+    gap: 15px;
+}
+
+/* Кнопка "Применить" */
+.btn-apply {
+    width: 100%;
+    padding: 18px;
+    background: #000;
+    color: #fff;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 20px;
+}
+
+.btn-apply:hover {
+    background: #333;
+}

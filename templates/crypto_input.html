@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="crypto-payment-container">
+    <div class="payment-box">
+        <h2 class="payment-title">Оплата криптовалютой</h2>
+        <p class="payment-subtitle">Выберите валюту для оплаты заказа</p>
+
+        <div class="crypto-selector">
+            <button class="crypto-opt active" onclick="selectCrypto('USDT', 'TRC20', 'T9yD...7HzQ')">
+                <i class="ri-t-box-line"></i> USDT (TRC20)
+            </button>
+            <button class="crypto-opt" onclick="selectCrypto('BTC', 'Bitcoin', '1A1z...P5QJ')">
+                <i class="ri-bit-coin-line"></i> Bitcoin
+            </button>
+            <button class="crypto-opt" onclick="selectCrypto('ETH', 'ERC20', '0x71...529d')">
+                <i class="ri-eth-line"></i> Ethereum
+            </button>
+        </div>
+
+        <div class="address-section">
+            <label id="crypto-label">Адрес для перевода USDT (TRC20)</label>
+            <div class="copy-field">
+                <input type="text" id="wallet-address" value="T9yD14Nj9j7xXBicf7HzQ" readonly>
+                <button onclick="copyAddress()"><i class="ri-file-copy-line"></i></button>
+            </div>
+            
+            <div class="qr-placeholder">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=T9yD14Nj9j7xXBicf7HzQ" id="qr-img">
+            </div>
+
+            <p class="payment-timer">Ожидание транзакции: <span id="timer">15:00</span></p>
+        </div>
+
+        <button class="btn-check-payment" id="check-btn" onclick="verifyCryptoPayment()">Я ОПЛАТИЛ</button>
+        <p class="warning-text">Внимание: перевод не в той сети может привести к потере средств.</p>
+    </div>
+</div>
+
+<style>
+    /* стили*/
+    .crypto-payment-container { display: flex; justify-content: center; align-items: center; padding: 60px 20px; min-height: 80vh; background: #fafafa; }
+    .payment-box { background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 500px; text-align: center; }
+    .payment-title { font-family: 'Playfair Display', serif; margin-bottom: 10px; }
+    .payment-subtitle { font-size: 14px; color: #888; margin-bottom: 30px; }
+    .crypto-selector { display: flex; gap: 10px; margin-bottom: 30px; justify-content: center; }
+    .crypto-opt { padding: 10px 15px; border: 1px solid #eee; background: #fff; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s; }
+    .crypto-opt.active { border-color: #000; background: #f9f9f9; }
+    .address-section { background: #f9f9f9; padding: 25px; border-radius: 12px; margin-bottom: 25px; }
+    .address-section label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 10px; color: #555; }
+    .copy-field { display: flex; gap: 5px; margin-bottom: 20px; }
+    .copy-field input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 12px; background: #fff; }
+    .copy-field button { padding: 0 15px; background: #000; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    .qr-placeholder { margin-bottom: 20px; }
+    .qr-placeholder img { border: 10px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .payment-timer { font-size: 14px; font-weight: bold; color: #e74c3c; }
+    .btn-check-payment { width: 100%; padding: 15px; background: #000; color: #fff; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+    .btn-check-payment:hover { background: #333; }
+    .warning-text { font-size: 10px; color: #aaa; margin-top: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .spin { animation: spin 1s linear infinite; display: inline-block; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+
+<script>
+function selectCrypto(coin, network, addr) {
+    document.querySelectorAll('.crypto-opt').forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById('crypto-label').innerText = `Адрес для перевода ${coin} (${network})`;
+    document.getElementById('wallet-address').value = addr;
+    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${addr}`;
+}
+
+async function verifyCryptoPayment() {
+    const btn = document.getElementById('check-btn');
+    btn.innerHTML = '<i class="ri-loader-4-line spin"></i> Поиск транзакции в блокчейне...';
+    btn.style.pointerEvents = 'none';
+
+    // СОХРАНЕНИЕ В БАЗУ
+    const orderData = { user_id: 1, product_id: 1, size: "42" };
+
+    try {
+        const response = await fetch('/api/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (response.ok) {
+            setTimeout(() => {
+                window.location.href = "/payment-success";
+            }, 2500);
+        }
+    } catch (e) {
+        window.location.href = "/payment-success";
+    }
+}
+
+function copyAddress() {
+    const copyText = document.getElementById("wallet-address");
+    copyText.select();
+    document.execCommand("copy");
+    alert("Адрес скопирован!");
+}
+
+let time = 900;
+setInterval(() => {
+    let min = Math.floor(time / 60);
+    let sec = time % 60;
+    document.getElementById('timer').innerText = `${min}:${sec < 10 ? '0' + sec : sec}`;
+    if(time > 0) time--;
+}, 1000);
+</script>
+{% endblock %}

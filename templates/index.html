@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="product-tabs" style="padding: 20px 0; background: #fff; position: relative; z-index: 999;">
+    <div class="tabs-header" style="display: flex; justify-content: center; align-items: center; gap: 30px;">
+        <!-- ХИТЫ -->
+        <div class="tab-btn active"
+             onclick="showTab('hits', event)"
+             style="cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 900; letter-spacing: 2px; font-size: 14px; position: relative; padding-bottom: 5px;">
+             ХИТЫ
+        </div>
+
+        <span style="color: #ddd;">|</span>
+
+        <!-- НОВЫЕ ПОСТУПЛЕНИЯ -->
+        <div class="tab-btn"
+             onclick="showTab('new', event)"
+             style="cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 900; letter-spacing: 2px; font-size: 14px; position: relative; padding-bottom: 5px; color: #999;">
+             Новинки
+        </div>
+    </div>
+</section>
+
+<section class="hero">
+    <img src="/static/images/main_banner.jpeg" alt="New Collection">
+    <div class="hero-text">
+        <h1>NEW ARRIVALS</h1>
+        <a href="/catalog/all" class="btn-black">Смотреть всё</a>
+    </div>
+</section>
+
+<section class="promo-grid">
+    <h2 class="section-title">SHOP BY STYLE</h2>
+    <div class="promo-container">
+        <!-- ссылки на конкректные товары -->
+        <a href="/product/1" class="promo-item">
+            <img src="/static/images/Air_Max_Portal.jpg" alt="Air Max">
+            <div class="promo-label">Кроссовки AIR Max Portal</div>
+        </a>
+        <a href="/product/2" class="promo-item">
+            <img src="/static/images/DUNK_LOW_RETRO.jpg" alt="Nike">
+            <div class="promo-label">Кеды Dunk Low Retro</div>
+        </a>
+        <a href="/product/3" class="promo-item">
+            <img src="/static/images/Nike_V5_RNR.jpg" alt="Air Max">
+            <div class="promo-label">Кроссовки Nike V5 RNR</div>
+        </a>
+        <a href="/product/4" class="promo-item">
+            <img src="/static/images/WMNS_NIKE_AIR_MAX_MUSE.jpg" alt="All Stars">
+            <div class="promo-label">Кроссовки WMNS Nike AIR</div>
+        </a>
+    </div>
+    <div class="promo-container" style="margin-top: 20px;">
+        <a href="/product/5" class="promo-item">
+            <img src="/static/images/CK_Brown.jpg" alt="CK">
+            <div class="promo-label">Куртка Calvin Klein Jeans</div>
+        </a>
+        <a href="/product/6" class="promo-item">
+            <img src="/static/images/CK_black.jpg" alt="CK">
+            <div class="promo-label">Куртка Calvin Klein </div>
+        </a>
+        <a href="/product/7" class="promo-item">
+            <img src="/static/images/Levi's.jpg" alt="Levis">
+            <div class="promo-label">Джинсы Levi's</div>
+        </a>
+        <a href="/product/8" class="promo-item">
+            <img src="/static/images/TM.jpg" alt="TM">
+            <div class="promo-label">Пальто Tommy Hilfiger</div>
+        </a>
+    </div>
+</section>
+
+<!--<section class="product-sections">-->
+<!--    <div id="hits-grid" class="product-grid active">-->
+<!--        {% for p in hits %}-->
+<!--        <a href="/product/{{ p.id }}" class="product-card-link" style="text-decoration: none; color: inherit;">-->
+<!--            <div class="product-card">-->
+<!--                <div class="card-image">-->
+<!--                    <img src="/static/images/products/{{ p.id }}.jpg" alt="{{ p.name }}" onerror="this.src='https://placehold.co/400x600/000/fff?text={{ p.brand }}'">-->
+<!--                    <div class="card-overlay">-->
+<!--                        <span class="btn-quick-add">ПОДРОБНЕЕ</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="product-info">-->
+<!--                    <p class="product-brand">{{ p.brand }}</p>-->
+<!--                    <p class="product-name">{{ p.name }}</p>-->
+<!--                    <p class="product-price">{{ "{:,.0f}".format(p.price).replace(',', ' ') }} KZT</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </a>-->
+<!--        {% endfor %}-->
+<!--    </div>-->
+
+<!--    <div id="new-grid" class="product-grid">-->
+<!--        {% for p in new_arrivals %}-->
+<!--        <a href="/product/{{ p.id }}" class="product-card-link" style="text-decoration: none; color: inherit;">-->
+<!--            <div class="product-card">-->
+<!--                <div class="card-image">-->
+<!--                    <img src="/static/images/products/{{ p.id }}.jpg" alt="{{ p.name }}" onerror="this.src='https://placehold.co/400x600/000/fff?text={{ p.brand }}'">-->
+<!--                    <div class="card-overlay">-->
+<!--                        <span class="btn-quick-add">ПОДРОБНЕЕ</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="product-info">-->
+<!--                    <p class="product-brand">{{ p.brand }}</p>-->
+<!--                    <p class="product-name">{{ p.name }}</p>-->
+<!--                    <p class="product-price">{{ "{:,.0f}".format(p.price).replace(',', ' ') }} KZT</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </a>-->
+<!--        {% endfor %}-->
+<!--    </div>-->
+<!--</section>-->
+
+<script>
+    function showTab(tabName, event) {
+        // 1. скрыть обе сетки
+        const hitsGrid = document.getElementById('hits-grid');
+        const newGrid = document.getElementById('new-grid');
+
+        hitsGrid.style.display = 'none';
+        newGrid.style.display = 'none';
+
+        // 2. убрать активное состояние у всех кнопок
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.style.color = '#999'; // Делаем неактивные серыми
+        });
+
+        // 3. показать нужную сетку и подсвет кнопки
+        if (tabName === 'hits') {
+            hitsGrid.style.display = 'grid';
+        } else {
+            newGrid.style.display = 'grid';
+        }
+
+        // добавить полоску и черный цвет нажатой кнопке
+        const currentBtn = event.currentTarget;
+        currentBtn.classList.add('active');
+        currentBtn.style.color = '#000';
+    }
+</script>
+{% endblock %}

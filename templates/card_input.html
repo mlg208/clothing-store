@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card-payment-container">
+    <div class="payment-box">
+        <h2 class="payment-title">Оплата картой</h2>
+        <div class="card-brands">
+            <i class="ri-visa-line"></i>
+            <i class="ri-mastercard-line"></i>
+        </div>
+        
+        <form onsubmit="processCardPayment(event)">
+            <div class="input-group">
+                <label>Номер карты</label>
+                <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" required id="card-num">
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Срок действия</label>
+                    <input type="text" placeholder="ММ/ГГ" maxlength="5" required>
+                </div>
+                <div class="input-group">
+                    <label>CVV</label>
+                    <input type="password" placeholder="***" maxlength="3" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Имя держателя</label>
+                <input type="text" placeholder="NAME SURNAME" required style="text-transform: uppercase;">
+            </div>
+
+            <button type="submit" class="btn-pay" id="pay-button">Оплатить 85 000 KZT</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .card-payment-container { display: flex; justify-content: center; align-items: center; padding: 80px 20px; min-height: 70vh; background: #fdfdfd; }
+    .payment-box { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); width: 100%; max-width: 450px; }
+    .payment-title { font-family: 'Playfair Display', serif; margin-bottom: 20px; text-align: center; }
+    .card-brands { display: flex; justify-content: center; gap: 15px; font-size: 30px; color: #ddd; margin-bottom: 30px; }
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; color: #888; }
+    .input-group input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; outline: none; transition: 0.3s; }
+    .input-group input:focus { border-color: #000; }
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .btn-pay { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+    .btn-pay:hover { background: #333; }
+    .spin { animation: spin 1s linear infinite; display: inline-block; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+
+<script>
+async function processCardPayment(event) {
+    event.preventDefault();
+    const btn = document.getElementById('pay-button');
+    btn.innerHTML = '<i class="ri-loader-4-line spin"></i> Обработка...';
+    btn.style.pointerEvents = 'none';
+
+    // ДАННЫЕ ДЛЯ СОХРАНЕНИЯ В БАЗУ
+    const orderData = {
+        user_id: 1,      // Твой текущий пользователь
+        product_id: 1,   // ID товара (Jordan)
+        size: "42"       // Размер из корзины
+    };
+
+    try {
+        const response = await fetch('/api/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (response.ok) {
+            setTimeout(() => {
+                window.location.href = "/payment-success";
+            }, 1500);
+        } else {
+            alert("Ошибка сервера при создании заказа");
+            btn.innerHTML = 'Попробовать снова';
+            btn.style.pointerEvents = 'all';
+        }
+    } catch (e) {
+        console.error(e);
+        window.location.href = "/payment-success"; // Фолбэк для демо
+    }
+}
+</script>
+{% endblock %}

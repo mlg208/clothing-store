@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EFREMOV FASHION CLOSET</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ... старые стили ... */
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        /* Ссылка Новинки и другие */
+        .nav-links a {
+            text-decoration: none;
+            color: light_gray;
+            font-weight: bold;
+            padding: 10px 15px;
+            display: inline-block;
+            position: relative;
+            z-index: 20;
+        }
+
+        /* Мега-меню */
+        .mega-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 600px;
+            background: #fff;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: 0.3s;
+            z-index: 15;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-item:hover .mega-menu {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto; /* клик при наведении */
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/">EFREMOV FASHION CLOSET</a>
+        </div>
+
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="/catalog/men">Мужчины</a>
+                <div class="mega-menu">
+                    <div class="mega-menu-content">
+                        <div class="menu-column">
+                            <h3>Верхняя одежда</h3>
+                            <a href="#">Куртки и пальто</a>
+                            <a href="#">Джемперы</a>
+                            <a href="#">Худи</a>
+                        </div>
+                        <div class="menu-column">
+                            <h3>Низ</h3>
+                            <a href="#">Джинсы</a>
+                            <a href="#">Брюки</a>
+                            <a href="#">Шорты</a>
+                        </div>
+                        <div class="menu-column">
+                            <h3>Обувь</h3>
+                            <a href="#">Кроссовки</a>
+                            <a href="#">Кеды</a>
+                            <a href="/catalog/men">Вся коллекция</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a href="/catalog/women">Женщины</a>
+                <div class="mega-menu">
+                    <div class="mega-menu-content">
+                        <div class="menu-column">
+                            <h3>Одежда</h3>
+                            <a href="#">Платья</a>
+                            <a href="#">Топы</a>
+                            <a href="#">Юбки</a>
+                            <a href="#">Джинсы</a>
+                        </div>
+                        <div class="menu-column">
+                            <h3>Аксессуары</h3>
+                            <a href="#">Сумки</a>
+                            <a href="#">Украшения</a>
+                            <a href="/catalog/women">Смотреть всё</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li><a href="/new-arrivals">Новые поступления</a></li>
+        </ul>
+
+        <div class="nav-icons">
+            <a href="javascript:void(0)" onclick="openSearch()"><i class="ri-search-line"></i></a>
+            <a href="javascript:void(0)" onclick="toggleWishlist()"><i class="ri-heart-line"></i></a>
+            <a href="/cart"><i class="ri-shopping-bag-line"></i></a>
+            <a href="/profile/1"><i class="ri-user-line"></i></a>
+        </div>
+    </nav>
+
+    <!-- контейнер для увед -->
+    <div id="toast-container"></div>
+
+    <div id="search-overlay" class="search-overlay">
+        <div class="search-container">
+            <form action="/search" method="get" class="search-form-dynamic">
+                <div class="search-main-row">
+                    <i class="ri-search-line"></i>
+                    <input type="text" name="query" placeholder="ЧТО ВЫ ИЩЕТЕ?" id="search-input">
+                    <div class="search-actions">
+                        <button type="button" onclick="toggleFilterPanel()"><i class="ri-equalizer-line"></i></button>
+                        <button type="button" onclick="closeSearch()"><i class="ri-close-line"></i></button>
+                    </div>
+                </div>
+
+                <div id="filter-panel" class="filter-panel">
+                    <div class="filter-columns">
+                        <div class="filter-col">
+                            <label>БРЕНД</label>
+                            <select name="brand">
+                                <option value="">Все бренды</option>
+                                <option value="Nike">Nike</option>
+                                <option value="Jordan">Jordan</option>
+                                <option value="Adidas">Adidas</option>
+                                <option value="Calvin Klein">Calvin Klein</option>
+                                <option value="Levi's">Levi's</option>
+                                <option value="Tommy Hilfiger">Tommy Hilfiger</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-col">
+                            <label>РАЗМЕР</label>
+                            <select name="size">
+                                <option value="">Все размеры</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="39">39</option>
+                                <option value="40">40</option>
+                                <option value="41">41</option>
+                                <option value="42">42</option>
+                                <option value="43">43</option>
+                                <option value="44">44</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-col">
+                            <label>ЦЕНА (KZT)</label>
+                            <div class="price-inputs">
+                                <input type="number" name="min_price" placeholder="От">
+                                <input type="number" name="max_price" placeholder="До">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-apply">ПРИМЕНИТЬ ПАРАМЕТРЫ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3 class="footer-logo">EFREMOV FASHION CLOSET</h3>
+                <p>Премиальная одежда и обувь для тех, кто по-настоящему ценит стиль.</p>
+                <div class="social-links">
+                    <a href="#"><i class="ri-instagram-line"></i></a>
+                    <a href="#"><i class="ri-facebook-fill"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>МАГАЗИН</h4>
+                <ul>
+                    <li><a href="/catalog/men">Мужчины</a></li>
+                    <li><a href="/catalog/women">Женщины</a></li>
+                    <li><a href="/new-arrivals">Новинки</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>КОНТАКТЫ</h4>
+                <p><i class="ri-map-pin-line"></i> г. Алматы, пр. Аль-Фараби, 67/7</p>
+                <p><i class="ri-phone-line"></i> +7 (707) 123-45-67</p>
+                <p><i class="ri-mail-line"></i>Efremovinfo@mail.ru</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 EFREMOV FASHION CLOSET. Все права защищены. Проект был разработан в целях защиты дипломного проекта</p>
+        </div>
+    </footer>
+
+    <div id="wishlist-drawer">
+        <div class="drawer-header">
+            <h3>ИЗБРАННОЕ</h3>
+            <button onclick="toggleWishlist()" class="close-drawer">&times;</button>
+        </div>
+        <div id="wishlist-content">
+            <p class="empty-msg">Ваш список пуст</p>
+        </div>
+    </div>
+
+    <script>
+        // Функция универсального уведомления
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="ri-checkbox-circle-fill"></i> <span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        function toggleWishlist() {
+            document.getElementById('wishlist-drawer').classList.toggle('open');
+        }
+
+        function openSearch() {
+            const overlay = document.getElementById('search-overlay');
+            overlay.classList.add('active');
+            setTimeout(() => {
+                document.getElementById('search-input').focus();
+            }, 500);
+        }
+
+        function closeSearch() {
+            document.getElementById('search-overlay').classList.remove('active');
+            const panel = document.getElementById('filter-panel');
+            if (panel) panel.classList.remove('open');
+        }
+
+        function toggleFilterPanel() {
+            const panel = document.getElementById('filter-panel');
+            panel.classList.toggle('open');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") closeSearch();
+        });
+
+        document.addEventListener('click', function(event) {
+            const drawer = document.getElementById('wishlist-drawer');
+            const heartIcon = document.querySelector('.ri-heart-line');
+            if (drawer && drawer.classList.contains('open')) {
+                if (!drawer.contains(event.target) && !heartIcon.contains(event.target)) {
+                    drawer.classList.remove('open');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

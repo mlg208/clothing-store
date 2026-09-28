@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="profile-container">
+    <div class="profile-header">
+        <h1>ЛИЧНЫЙ КАБИНЕТ</h1>
+        <p class="user-status">Premium Member</p>
+    </div>
+
+    <div class="profile-grid">
+        <div class="profile-info">
+            <h3>ВАШИ ДАННЫЕ</h3>
+            <div class="info-item">
+                <label>Имя:</label>
+                <span id="user-name">Олег Иванов</span>
+            </div>
+            <div class="info-item">
+                <label>Email:</label>
+                <span id="user-email">oleg@example.com</span>
+            </div>
+            <div class="info-item">
+                <label>Телефон:</label>
+                <span id="user-phone">+7 (707) 123-45-67</span>
+            </div>
+
+            <button id="edit-btn" class="btn-outline" onclick="editProfile()">Редактировать</button>
+        </div>
+
+        <div class="profile-orders">
+            <h3>ИСТОРИЯ ЗАКАЗОВ</h3>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ТОВАР</th>
+                        <th>РАЗМЕР</th>
+                        <th>СТАТУС</th>
+                        <th>ДАТА</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.name }}</td>
+                    <td>{{ order.size }}</td>
+                    <td><span class="status-badge">{{ order.status }}</span></td>
+                    <td>{{ order.created_at.strftime('%d.%m.%Y') }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script>
+function editProfile() {
+    const btn = document.getElementById('edit-btn');
+    const nameSpan = document.getElementById('user-name');
+    const emailSpan = document.getElementById('user-email');
+    const phoneSpan = document.getElementById('user-phone');
+
+    if (btn.innerText === "РЕДАКТИРОВАТЬ") {
+        // переход в режим ввода
+        nameSpan.innerHTML = `<input type="text" id="input-name" value="${nameSpan.innerText}" class="edit-input">`;
+        emailSpan.innerHTML = `<input type="email" id="input-email" value="${emailSpan.innerText}" class="edit-input">`;
+        phoneSpan.innerHTML = `<input type="text" id="input-phone" value="${phoneSpan.innerText}" class="edit-input">`;
+
+        btn.innerText = "СОХРАНИТЬ";
+        btn.classList.add('save-mode');
+    } else {
+        // сохранить значения
+        const newName = document.getElementById('input-name').value;
+        const newEmail = document.getElementById('input-email').value;
+        const newPhone = document.getElementById('input-phone').value;
+
+        nameSpan.innerText = newName;
+        emailSpan.innerText = newEmail;
+        phoneSpan.innerText = newPhone;
+
+        btn.innerText = "РЕДАКТИРОВАТЬ";
+        btn.classList.remove('save-mode');
+
+        alert("Изменения успешно применены!");
+    }
+}
+</script>
+
+<style>
+/* Дополнительные стили спешл для этой страницы */
+.edit-input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    font-family: inherit;
+}
+.save-mode {
+    background: #000 !important;
+    color: #fff !important;
+}
+</style>
+{% endblock %}

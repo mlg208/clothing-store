@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="search-results-page">
+    <div class="container">
+        <h1 class="section-title">
+            {% if search_query %}
+                РЕЗУЛЬТАТЫ ПОИСКА: "{{ search_query }}"
+            {% else %}
+                РЕЗУЛЬТАТЫ ПОИСКА
+            {% endif %}
+        </h1>
+
+        <div class="product-grid active" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;">
+            {% if products %}
+                {% for p in products %}
+                <a href="/product/{{ p.id }}" style="text-decoration: none; color: inherit;">
+                    <div class="product-card">
+                        <div class="card-image">
+                            <img src="/static/images/products/{{ p.id }}.jpg" alt="{{ p.name }}" onerror="this.src='https://placehold.co/400x600/000/fff?text={{ p.brand }}'">
+                            <div class="card-overlay">
+                                <span class="btn-quick-add">ПОДРОБНЕЕ</span>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-brand">{{ p.brand }}</p>
+                            <p class="product-name">{{ p.name }}</p>
+                            <p class="product-price">{{ "{:,.0f}".format(p.price).replace(',', ' ') }} KZT</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="error_txt">
+                    <i class="ri-search-2-line" style="font-size: 50px; display: block; margin-bottom: 20px;"></i>
+                    <p>К сожалению, по вашему запросу ничего не найдено.</p>
+                    <a href="/" class="reset-link">Вернуться к покупкам</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .search-results-page { padding: 80px 50px; min-height: 60vh; }
+    .error_txt { grid-column: 1 / -1; text-align: center; padding: 100px 0; color: #888; }
+    .reset-link { display: inline-block; margin-top: 20px; color: #000; text-decoration: underline; font-weight: bold; text-transform: uppercase; font-size: 12px; }
+</style>
+{% endblock %}

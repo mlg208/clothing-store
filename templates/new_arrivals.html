@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="empty-page-container">
+    <div class="empty-content">
+        <i class="ri-rhythm-line"></i> <h1>НОВЫЕ ПОСТУПЛЕНИЯ</h1>
+        <p>На данный момент новых поступлений нет. <br> Мы готовим для вас нечто особенное.</p>
+        
+        <div class="newsletter-box">
+            <span>Узнайте о дропе первым:</span>
+            <div class="mini-form">
+                <input type="email" placeholder="Ваш Email">
+                <button class="btn-black">Подписаться</button>
+            </div>
+        </div>
+        
+        <a href="/" class="back-link">Вернуться на главную</a>
+    </div>
+</section>
+
+<style>
+.empty-page-container {
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.empty-content i {
+    font-size: 60px;
+    color: #ddd;
+    margin-bottom: 20px;
+    display: block;
+}
+.empty-content h1 {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+}
+.empty-content p {
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+.newsletter-box {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+.mini-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+}
+.mini-form input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+.back-link {
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+}
+</style>
+{% endblock %}

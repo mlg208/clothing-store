@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="checkout-container">
+    <h1 class="section-title">ВЫБОР СПОСОБА ОПЛАТЫ</h1>
+    
+    <div class="payment-methods">
+        <!-- каспи -->
+        <div class="payment-card" onclick="processFakePayment('Kaspi.kz')">
+            <img src="https://kaspi.kz/img/logo.svg" alt="Kaspi" onerror="this.src='https://placehold.co/100x40?text=KASPI'">
+            <span>Оплата через Kaspi.kz</span>
+        </div>
+
+        <!-- халык -->
+        <div class="payment-card" onclick="processFakePayment('Halyk Bank')">
+            <img src="https://halykbank.kz/logo.svg" alt="Halyk" onerror="this.src='https://placehold.co/100x40?text=HALYK'">
+            <span>Halyk Bank (Homebank)</span>
+        </div>
+
+        <!-- крипта -->
+        <div class="payment-card" onclick="processFakePayment('Crypto')">
+            <i class="ri-bit-coin-line" style="font-size: 40px; color: #f3ba2f;"></i>
+            <span>Криптовалюта (USDT, BTC)</span>
+        </div>
+
+        <!-- банк карта -->
+        <div class="payment-card" onclick="processFakePayment('Bank Card')">
+            <i class="ri-bank-card-line" style="font-size: 40px;"></i>
+            <span>Банковская карта (Visa/Mastercard)</span>
+        </div>
+    </div>
+
+    <!-- индикатор загрузки -->
+    <div id="payment-loader" style="display:none; text-align:center; margin-top:30px;">
+        <div class="loader-spinner"></div>
+        <p>Устанавливаем безопасное соединение...</p>
+    </div>
+</div>
+
+<script>
+function processFakePayment(method) {
+    if (method === 'Bank Card') {
+        window.location.href = "/payment-card";
+    } else if (method === 'Crypto') {
+        //переход на крипто-страницу
+        window.location.href = "/payment-crypto";
+    } else {
+        // Kaspi и Halyk с прямой имитацией
+        document.querySelector('.payment-methods').style.opacity = '0.3';
+        document.getElementById('payment-loader').style.display = 'block';
+        setTimeout(() => {
+            window.location.href = "/payment-success";
+        }, 2000);
+    }
+}
+</script>
+
+<style>
+.checkout-container { max-width: 800px; margin: 80px auto; padding: 0 20px; min-height: 60vh; }
+.payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+.payment-card { 
+    border: 1px solid #eee; padding: 30px; text-align: center; 
+    cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; 
+    align-items: center; gap: 15px; background: #fff;
+}
+.payment-card:hover { border-color: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transform: translateY(-5px); }
+.payment-card img { height: 40px; object-fit: contain; }
+.payment-card span { font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+
+.loader-spinner {
+    width: 40px; height: 40px; border: 3px solid #f3f3f3;
+    border-top: 3px solid #000; border-radius: 50%;
+    animation: spin 1s linear infinite; margin: 0 auto 15px;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+{% endblock %}

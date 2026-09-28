@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; padding: 100px 20px; min-height: 60vh;">
+    <div style="margin-bottom: 30px;">
+        <i class="ri-checkbox-circle-fill" style="font-size: 80px; color: #27ae60;"></i>
+    </div>
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 36px; margin-bottom: 20px; text-transform: uppercase;">Заказ успешно оплачен</h1>
+    <p style="color: #666; font-size: 16px; margin-bottom: 40px;">Благодарим за покупку! Информация о заказе отправлена на ваш e-mail.</p>
+
+    <a href="/" class="btn-black" style="padding: 15px 40px; text-decoration: none; color: #fff; background: #000; font-weight: bold; border-radius: 50px;">
+        ВЕРНУТЬСЯ В МАГАЗИН
+    </a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. берем товары из корзины
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    if (cart.length === 0) return; // Если корзина уже пуста, ничего не делаем
+
+    // 2. отправить каждый товар в базу данных через API
+    for (const item of cart) {
+        try {
+            const response = await fetch('/api/create-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: 1, // Твой ID по умолчанию из main.py
+                    product_id: item.id,
+                    size: item.size
+                })
+            });
+
+            const result = await response.json();
+            console.log('Заказ создан:', result);
+        } catch (error) {
+            console.error('Ошибка при сохранении заказа:', error);
+        }
+    }
+
+    // 3. Очищаем корзину после успешной записи в БД
+    localStorage.removeItem('cart');
+});
+</script>
+{% endblock %}

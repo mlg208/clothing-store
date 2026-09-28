@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="cart-container">
+    <!-- центрирование закголовка -->
+    <div class="cart-header" style="text-align: center; margin-bottom: 50px;">
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 36px; letter-spacing: 2px;">ВАША КОРЗИНА</h1>
+    </div>
+
+    <div class="cart-content" id="cart-wrapper" style="display: flex; gap: 50px; align-items: flex-start;">
+        <!-- списки товаров -->
+        <div class="cart-items-list" id="cart-items-container" style="flex: 2;">
+            <!-- динамическая загрузка товаров -->
+        </div>
+
+        <!-- блок ИТОГО -->
+        <div class="cart-summary" id="cart-sidebar" style="display: none; flex: 1; background: #f9f9f9; padding: 30px; border-radius: 4px;">
+            <h3 style="margin-bottom: 20px; font-family: 'Montserrat', sans-serif;">ИТОГО</h3>
+            <div class="summary-row" style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <span id="items-count">Товары (0)</span>
+                <span id="summary-subtotal">0 KZT</span>
+            </div>
+            <div class="summary-row" style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <span>Доставка</span>
+                <span style="color: green; font-weight: bold;">Бесплатно</span>
+            </div>
+            <div class="summary-total" style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-weight: bold; font-size: 18px;">
+                <span>К ОПЛАТЕ</span>
+                <span id="summary-total-price">0 KZT</span>
+            </div>
+
+            <a href="/checkout" class="btn-black" style="display: block; text-align: center; text-decoration: none; margin-top: 30px; background: #000; color: #fff; padding: 20px; font-weight: bold; letter-spacing: 1px;">
+                ОФОРМИТЬ ЗАКАЗ
+            </a>
+
+            <p class="payment-methods" style="margin-top: 20px; font-size: 11px; color: #888; text-align: center;">
+                Принимаем к оплате: VISA, MASTERCARD, KASPI, КРИПТОВАЛЮТА
+            </p>
+        </div>
+    </div>
+</section>
+
+<script>
+// функция загрузки товаров из localStorage
+function loadCart() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('cart-items-container');
+    const sidebar = document.getElementById('cart-sidebar');
+    const wrapper = document.getElementById('cart-wrapper');
+
+    // если корзина пуста
+    if (cart.length === 0) {
+        if (sidebar) sidebar.style.display = 'none';
+        wrapper.style.display = 'block'; // Меняем на block для центровки
+        wrapper.innerHTML = `
+            <div style="text-align:center; padding: 100px 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 20px;">Ваша корзина пуста</h2>
+                <a href="/" class="btn-black" style="padding: 15px 40px; text-decoration: none; color: #fff; background: #000; font-weight: bold; font-size: 12px; letter-spacing: 1px; border-radius: 50px;">
+                    ВЕРНУТЬСЯ К ПОКУПКАМ
+                </a>
+            </div>`;
+        return;
+    }
+
+    // если товары есть
+    wrapper.style.display = 'flex'; // Возвращаем flex для сетки
+    sidebar.style.display = 'block';
+    container.innerHTML = '';
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        total += item.price;
+        container.innerHTML += `
+            <div class="cart-item" id="cart-item-${index}" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid #eee;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="/static/images/products/${item.id}.jpg" alt="${item.name}" style="width: 80px; height: 100px; object-fit: cover;" onerror="this.src='https://placehold.co/80x100?text=Item'">
+                    <div class="item-details">
+                        <h3 style="font-size: 16px; margin: 0;">${item.name}</h3>
+                        <p style="font-size: 12px; color: #888; margin: 5px 0;">Размер: ${item.size}</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 30px;">
+                    <div class="item-price" style="font-weight: bold;">${item.price.toLocaleString()} KZT</div>
+                    <button class="remove-btn" onclick="removeFromCart(${index})" style="background: none; border: none; cursor: pointer; font-size: 20px;">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+            </div>`;
+    });
+
+    // обновляем цифры в Итого
+    const formattedTotal = total.toLocaleString() + " KZT";
+    document.getElementById('summary-total-price').innerText = formattedTotal;
+    document.getElementById('summary-subtotal').innerText = formattedTotal;
+    document.getElementById('items-count').innerText = `Товары (${cart.length})`;
+}
+
+// функция удаления
+function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const itemElement = document.getElementById(`cart-item-${index}`);
+
+    if (itemElement) {
+        itemElement.style.transition = "0.3s";
+        itemElement.style.opacity = "0";
+        itemElement.style.transform = "translateX(20px)";
+    }
+
+    setTimeout(() => {
+        cart.splice(index, 1); // Удаляем из массива
+        localStorage.setItem('cart', JSON.stringify(cart)); // Сохраняем
+        loadCart(); // Перерисовываем
+    }, 300);
+}
+
+// запуск при загрузке страницы
+document.addEventListener('DOMContentLoaded', loadCart);
+</script>
+{% endblock %}
