@@ -1,35 +1,37 @@
+import os
+from typing import Optional
+
 import pandas as pd
 from fastapi import FastAPI, Request, HTTPException, Body
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import create_engine, text
-from typing import Optional
-import os
 
 app = FastAPI()
 
-#статика (CSS, JS, Картинки)
+# статика: css, JS, картинки
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # настройка шаблонов Jinja2
 templates = Jinja2Templates(directory="templates")
 
 # подключение к PostgreSQL
-# DATABASE_URL = "postgresql://postgres:1234@localhost:5432/brand_shop"
-# engine = create_engine(DATABASE_URL)
-
 
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
-    "postgresql://postgres:1234@localhost:5432/brand_shop")
+    "postgresql+psycopg://postgres:1234@localhost:5432/brand_shop"
+)
+
 
 if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
 
-# --- маршрут фронта ---
+#маршруты фронта
 
 @app.get("/")
 async def home(request: Request):
@@ -41,8 +43,7 @@ async def home(request: Request):
         hits_products = conn.execute(query_hits).mappings().all()
         new_products = conn.execute(query_new).mappings().all()
 
-    return templates.TemplateResponse("index.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "index.html", {
         "hits": hits_products,
         "new_arrivals": new_products
     })
@@ -55,8 +56,7 @@ async def get_catalog(request: Request, gender: str):
     with engine.connect() as conn:
         products = conn.execute(query, {"g": gender}).mappings().all()
 
-    return templates.TemplateResponse("catalog.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "catalog.html", {
         "products": products,
         "gender": gender.capitalize()
     })
@@ -90,9 +90,8 @@ async def search_products(
         sql += " AND brand = :brand"
         params["brand"] = brand
 
-
     if size and size.strip():
-        sql += f" AND (stock_json ->> :size)::int > 0"
+        sql += " AND (stock_json ->> :size)::int > 0"
         params["size"] = size
 
     sql += " ORDER BY created_at DESC"
@@ -101,8 +100,7 @@ async def search_products(
         result = conn.execute(text(sql), params)
         products = result.mappings().all()
 
-    return templates.TemplateResponse("search.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "search.html", {
         "products": products,
         "search_query": query
     })
@@ -111,7 +109,7 @@ async def search_products(
 @app.get("/new-arrivals")
 async def new_arrivals(request: Request):
     """Страница-заглушка для новых поступлений"""
-    return templates.TemplateResponse("new_arrivals.html", {"request": request})
+    return templates.TemplateResponse(request, "new_arrivals.html")
 
 
 @app.get("/profile/{user_id}")
@@ -127,8 +125,7 @@ async def profile(request: Request, user_id: int):
     with engine.connect() as conn:
         orders = conn.execute(query, {"u_id": user_id}).mappings().all()
 
-    return templates.TemplateResponse("profile.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "profile.html", {
         "orders": orders,
         "user_id": user_id
     })
@@ -137,17 +134,21 @@ async def profile(request: Request, user_id: int):
 @app.get("/cart")
 async def cart(request: Request):
     """Корзина"""
-    return templates.TemplateResponse("cart.html", {"request": request})
+    return templates.TemplateResponse(request, "cart.html")
 
 
-# --- APIшки АНАЛИТИКИ ---
+#API аналитики
 
 @app.get("/api/recommendations/{user_id}")
 async def api_recommendations(user_id: int):
     """Аналитика Pandas: рекомендации на основе истории покупок"""
     try:
-        query = f"SELECT p.brand FROM orders o JOIN products p ON o.product_id = p.id WHERE o.user_id = {user_id}"
-        df = pd.read_sql(query, engine)
+        query = text(
+            "SELECT p.brand FROM orders o "
+            "JOIN products p ON o.product_id = p.id "
+            "WHERE o.user_id = :u_id"
+        )
+        df = pd.read_sql(query, engine, params={"u_id": user_id})
 
         if df.empty:
             return {"type": "general", "items": []}
@@ -166,27 +167,32 @@ async def api_recommendations(user_id: int):
 @app.get("/checkout")
 async def checkout(request: Request):
     """Страница выбора способа оплаты"""
-    return templates.TemplateResponse("checkout.html", {"request": request})
+    return templates.TemplateResponse(request, "checkout.html")
+
 
 @app.get("/payment-success")
 async def payment_success(request: Request):
     """Страница успешной имитации оплаты"""
-    return templates.TemplateResponse("success.html", {"request": request})
+    return templates.TemplateResponse(request, "success.html")
+
+
 @app.get("/payment-card")
 async def payment_card(request: Request):
     """Страница ввода данных банковской карты"""
-    return templates.TemplateResponse("card_input.html", {"request": request})
+    return templates.TemplateResponse(request, "card_input.html")
+
+
 @app.get("/payment-crypto")
 async def payment_crypto(request: Request):
     """Страница оплаты криптовалютой"""
-    return templates.TemplateResponse("crypto_input.html", {"request": request})
+    return templates.TemplateResponse(request, "crypto_input.html")
 
 
-#история заказов
+# история заказов
 @app.post("/api/create-order")
 async def create_order(payload: dict = Body(...)):
     """API для записи заказа в БД после 'оплаты'"""
-    user_id = payload.get("user_id", 1)  # Пока фиксируем ID=1, патамушта нет системы логина
+    user_id = payload.get("user_id", 1)  # Пока фиксируем ID=1, потому что нет системы логина
     product_id = payload.get("product_id")
     size = payload.get("size")
 
@@ -207,8 +213,7 @@ async def create_order(payload: dict = Body(...)):
         return {"status": "error", "message": str(e)}
 
 
-
-#товары
+# товары
 @app.get("/product/{product_id}")
 async def product_detail(request: Request, product_id: int):
     query = text("SELECT * FROM products WHERE id = :p_id")
@@ -218,15 +223,14 @@ async def product_detail(request: Request, product_id: int):
             product = result.mappings().first()
 
         if not product:
-            return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+            return templates.TemplateResponse(request, "404.html", status_code=404)
 
         product_dict = dict(product)
 
         if "description" not in product_dict or not product_dict["description"]:
             product_dict["description"] = "Описание этого премиального товара скоро появится."
 
-        return templates.TemplateResponse("product_detail.html", {
-            "request": request,
+        return templates.TemplateResponse(request, "product_detail.html", {
             "product": product_dict
         })
     except Exception as e:
